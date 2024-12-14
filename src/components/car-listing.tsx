@@ -659,9 +659,7 @@ export default function CarListing() {
                     key={brand}
                     className="mb-12 rounded-md border border-cyan-900 p-4 bg-secondary"
                 >
-                    <h2 className="text-2xl font-semibold mb-4 text-background">
-                        {brand}
-                    </h2>
+                    <h2 className="text-2xl font-semibold mb-4">{brand}</h2>
                     <Table className="table-fixed">
                         <TableHeader>
                             <TableRow>

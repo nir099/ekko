@@ -544,7 +544,7 @@ export default function CarListing() {
                 <div className="grid grid-cols-1 wrap gap-4 justify-between  md:grid-cols-3 ">
                     <div>
                         <h3 className="text-2xl font-semibold">Petrol</h3>
-                        <h4 className="text-sm font-normal mb-4 text-secondary">
+                        <h4 className="text-sm font-normal mb-4">
                             refer section: 8703.20
                         </h4>
                         <Table>
@@ -583,7 +583,7 @@ export default function CarListing() {
                         <h3 className="text-2xl font-semibold">
                             Petrol/Hybrid or EV/Hybrid
                         </h3>
-                        <h4 className="text-sm font-normal mb-4 text-secondary">
+                        <h4 className="text-sm font-normal mb-4">
                             refer section: 8703.40 and 8703.60
                         </h4>
                         <Table>
@@ -620,7 +620,7 @@ export default function CarListing() {
 
                     <div>
                         <h3 className="text-2xl font-semibold">EV</h3>
-                        <h4 className="text-sm font-normal mb-4 text-secondary">
+                        <h4 className="text-sm font-normal mb-4">
                             refer section: 8703.80
                         </h4>
                         <Table>

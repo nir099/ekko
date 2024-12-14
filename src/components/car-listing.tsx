@@ -685,7 +685,9 @@ export default function CarListing() {
                                             currencyDisplay: "narrowSymbol",
                                             maximumFractionDigits: 1,
                                             minimumFractionDigits: 0,
-                                        }).format(car.price)}
+                                        })
+                                            .format(car.price)
+                                            .replaceAll(",", ".")}
                                     </TableCell>
                                 </TableRow>
                             ))}

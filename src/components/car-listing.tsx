@@ -459,17 +459,17 @@ export default function CarListing() {
             return;
         }
 
-        let taxRate =
+        const taxRate =
             vehicleType === "ev"
                 ? getEvTaxRate(parseFloat(engineCapacity))
                 : vehicleType === "hybrid"
                 ? getHybridTaxRate(parseFloat(engineCapacity))
                 : getPetrolTaxRate(parseFloat(engineCapacity));
-        let engineCapacityTax = taxRate * parseFloat(engineCapacity);
+        const engineCapacityTax = taxRate * parseFloat(engineCapacity);
         // let otherLevis = 0.1 * parseFloat(cifValue); ignoring assuming its already on CIF
-        let beforeVat = parseFloat(cifValue) + engineCapacityTax;
-        let vat = 0.18 * beforeVat;
-        let result = beforeVat + vat;
+        const beforeVat = parseFloat(cifValue) + engineCapacityTax;
+        const vat = 0.18 * beforeVat;
+        const result = beforeVat + vat;
 
         setCalculationResult(result);
     };

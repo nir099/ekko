@@ -456,6 +456,7 @@ export default function CarListing() {
 
     const performCalculation = () => {
         if (!vehicleType || !cifValue || !engineCapacity) {
+            setCalculationResult(null);
             return;
         }
 
@@ -504,6 +505,9 @@ export default function CarListing() {
                     placeholder="Enter CIF value in LKR"
                     value={cifValue}
                     onChange={(e) => setCifValue(e.target.value)}
+                    onKeyDown={(e) =>
+                        e.key === "Enter" ? performCalculation() : null
+                    }
                 />
 
                 <Input
@@ -515,11 +519,22 @@ export default function CarListing() {
                     }
                     value={engineCapacity}
                     onChange={(e) => setEngineCapacity(e.target.value)}
+                    onKeyDown={(e) =>
+                        e.key === "Enter" ? performCalculation() : null
+                    }
                 />
 
                 <Button onClick={performCalculation}>Calculate</Button>
             </div>
-
+            <div className="mb-8 p-4 bg-secondary rounded-md">
+                <p className="text-lg font-semibold">
+                    Formula : CIF + (Engine Capacity * Tax Rate) + (CIF +
+                    (Engine Capacity * Tax Rate) * 0.18)
+                </p>
+                <p className="text-lg font-semibold">
+                    make sure your CIF includes other levies
+                </p>
+            </div>
             {calculationResult !== null && (
                 <div className="mb-8 p-4 bg-secondary rounded-md">
                     <p className="text-lg font-semibold">
@@ -527,6 +542,14 @@ export default function CarListing() {
                         {Intl.NumberFormat("en-SI", {
                             style: "currency",
                             currency: "LKR",
+                        }).format(calculationResult)}
+                    </p>
+                    <p className="text-lg font-semibold text-violet-400">
+                        Price ~:{" "}
+                        {Intl.NumberFormat("en-SI", {
+                            style: "currency",
+                            currency: "LKR",
+                            notation: "compact",
                         }).format(calculationResult)}
                     </p>
                 </div>

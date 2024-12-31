@@ -380,6 +380,8 @@ const getHybridTaxRate = (engineCapacity: number) => {
         return 5950;
     } else if (engineCapacity >= 1801 && engineCapacity <= 2000) {
         return 6500;
+    } else if (engineCapacity >= 2001 && engineCapacity <= 2500) {
+        return 6850;
     }
     return 0;
 };
@@ -408,6 +410,8 @@ const getPetrolTaxRate = (engineCapacity: number) => {
         return 6050;
     } else if (engineCapacity >= 1801 && engineCapacity <= 2000) {
         return 7250;
+    } else if (engineCapacity >= 2001 && engineCapacity <= 2500) {
+        return 8000;
     }
     return 0;
 };
@@ -419,6 +423,7 @@ const hybridUnitCapacityWithPrice = [
     { cc: "1501 - 1600", price: "4550" },
     { cc: "1601 - 1800", price: "5950" },
     { cc: "1801 - 2000", price: "6500" },
+    { cc: "20011 - 2500", price: "6850" },
 ];
 
 const evUnitCapacityWithPrice = [
@@ -434,6 +439,7 @@ const petrolUnitCapacityWithPrice = [
     { cc: "1501 - 1600", price: "4850" },
     { cc: "1601 - 1800", price: "6050" },
     { cc: "1801 - 2000", price: "7250" },
+    { cc: "2001 - 2500", price: "8000" },
 ];
 
 export default function CarListing() {
@@ -443,6 +449,8 @@ export default function CarListing() {
     const [calculationResult, setCalculationResult] = useState<number | null>(
         null
     );
+    const [engineTax, setEngineTax] = useState<number | null>(null);
+    const [vat, setVat] = useState<number | null>(null);
 
     const groupedCars = useMemo(() => {
         return carList.reduce((acc, car) => {
@@ -456,6 +464,8 @@ export default function CarListing() {
 
     const performCalculation = () => {
         if (!vehicleType || !cifValue || !engineCapacity) {
+            setEngineTax(null);
+            setVat(null);
             setCalculationResult(null);
             return;
         }
@@ -467,9 +477,11 @@ export default function CarListing() {
                 ? getHybridTaxRate(parseFloat(engineCapacity))
                 : getPetrolTaxRate(parseFloat(engineCapacity));
         const engineCapacityTax = taxRate * parseFloat(engineCapacity);
+        setEngineTax(engineCapacityTax);
         // let otherLevis = 0.1 * parseFloat(cifValue); ignoring assuming its already on CIF
         const beforeVat = parseFloat(cifValue) + engineCapacityTax;
         const vat = 0.18 * beforeVat;
+        setVat(vat);
         const result = beforeVat + vat;
 
         setCalculationResult(result);
@@ -522,6 +534,8 @@ export default function CarListing() {
                     onKeyDown={(e) =>
                         e.key === "Enter" ? performCalculation() : null
                     }
+                    max={2500}
+                    min={1}
                 />
 
                 <Button onClick={performCalculation}>Calculate</Button>
@@ -535,25 +549,48 @@ export default function CarListing() {
                     make sure your CIF includes other levies
                 </p>
             </div>
-            {calculationResult !== null && (
-                <div className="mb-8 p-4 bg-secondary rounded-md">
-                    <p className="text-lg font-semibold">
-                        Final Price:{" "}
-                        {Intl.NumberFormat("en-SI", {
-                            style: "currency",
-                            currency: "LKR",
-                        }).format(calculationResult)}
-                    </p>
-                    <p className="text-lg font-semibold text-violet-400">
-                        Price ~:{" "}
-                        {Intl.NumberFormat("en-SI", {
-                            style: "currency",
-                            currency: "LKR",
-                            notation: "compact",
-                        }).format(calculationResult)}
-                    </p>
-                </div>
-            )}
+            {calculationResult !== null &&
+                engineTax !== null &&
+                vat !== null && (
+                    <div className="mb-8 p-4 bg-secondary rounded-md">
+                        <p className="text-sm font-normal">
+                            CIF:{" "}
+                            {Intl.NumberFormat("en-SI", {
+                                style: "currency",
+                                currency: "LKR",
+                            }).format(Number(cifValue))}
+                        </p>
+                        <p className="text-sm font-normal">
+                            Engine Tax:{" "}
+                            {Intl.NumberFormat("en-SI", {
+                                style: "currency",
+                                currency: "LKR",
+                            }).format(engineTax)}
+                        </p>
+                        <p className="text-sm font-normal mb-1">
+                            Total vat:{" "}
+                            {Intl.NumberFormat("en-SI", {
+                                style: "currency",
+                                currency: "LKR",
+                            }).format(vat)}
+                        </p>
+                        <p className="text-lg font-semibold">
+                            Final Price:{" "}
+                            {Intl.NumberFormat("en-SI", {
+                                style: "currency",
+                                currency: "LKR",
+                            }).format(calculationResult)}
+                        </p>
+                        <p className="text-lg font-semibold text-violet-400">
+                            Price ~:{" "}
+                            {Intl.NumberFormat("en-SI", {
+                                style: "currency",
+                                currency: "LKR",
+                                notation: "compact",
+                            }).format(calculationResult)}
+                        </p>
+                    </div>
+                )}
 
             <h2 className="text-3xl font-bold mb-8 flex items-center gap-2">
                 Unit references (2024)

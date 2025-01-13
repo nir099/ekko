@@ -1,7 +1,7 @@
 "use client";
 
 import { Download } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import {
@@ -20,495 +20,295 @@ import {
     TableRow,
 } from "~/components/ui/table";
 
-const carList = [
-    // New data
-    {
-        brand: "BYD",
-        model: "Dolphin",
-        price: 11000000,
-        type: "EV",
-        capacity: "",
-    },
-    {
-        brand: "BYD",
-        model: "Dolphin Performance",
-        price: 11500000,
-        type: "EV",
-        capacity: "",
-    },
-    {
-        brand: "BYD",
-        model: "Atto 3",
-        price: 15000000,
-        type: "EV",
-        capacity: "",
-    },
-    {
-        brand: "BYD",
-        model: "Atto 3 Performance",
-        price: 17000000,
-        type: "EV",
-        capacity: "",
-    },
-    {
-        brand: "BYD",
-        model: "Seal",
-        price: 21000000,
-        type: "EV",
-        capacity: "",
-    },
-    {
-        brand: "BYD",
-        model: "Sealion",
-        price: 22000000,
-        type: "EV",
-        capacity: "",
-    },
-    {
-        brand: "Kia",
-        model: "Sonet",
-        price: 7000000,
-        type: "Petrol",
-        capacity: "",
-    },
-    {
-        brand: "Kia",
-        model: "Stonic",
-        price: 9000000,
-        type: "Petrol",
-        capacity: "",
-    },
-    {
-        brand: "Kia",
-        model: "EV3",
-        price: 13000000,
-        type: "EV",
-        capacity: "",
-    },
-    {
-        brand: "Kia",
-        model: "Seltos",
-        price: 14000000,
-        type: "Petrol",
-        capacity: "",
-    },
-    {
-        brand: "Kia",
-        model: "EV5 Electric",
-        price: 16000000,
-        type: "EV",
-        capacity: "",
-    },
-    {
-        brand: "Kia",
-        model: "Sportage HEV/PHEV",
-        price: 19000000,
-        type: "Hybrid",
-        capacity: "",
-    },
-    {
-        brand: "Kia",
-        model: "EV6 Electric",
-        price: 19000000,
-        type: "EV",
-        capacity: "",
-    },
-    {
-        brand: "Kia",
-        model: "Sorento HEV/PHEV",
-        price: 22000000,
-        type: "Hybrid",
-        capacity: "",
-    },
-    {
-        brand: "Kia",
-        model: "Carnival HEV/PHEV",
-        price: 23000000,
-        type: "Hybrid",
-        capacity: "",
-    },
-    {
-        brand: "Kia",
-        model: "EV9 Electric",
-        price: 27000000,
-        type: "EV",
-        capacity: "",
-    },
-    {
-        brand: "Mitsubishi",
-        model: "Attrage",
-        price: 8890000,
-        type: "Petrol",
-        capacity: "",
-    },
-    {
-        brand: "Mitsubishi",
-        model: "Xpander",
-        price: 12190000,
-        type: "Petrol",
-        capacity: "",
-    },
-    {
-        brand: "Mitsubishi",
-        model: "Xforce/Outlander",
-        price: 14890000,
-        type: "Petrol",
-        capacity: "",
-    },
-    {
-        brand: "Mitsubishi",
-        model: "Xforce/Outlander",
-        price: 18000000,
-        type: "Hybrid",
-        capacity: "",
-    },
-    {
-        brand: "Mitsubishi",
-        model: "Xpander Cross",
-        price: 14590000,
-        type: "Petrol",
-        capacity: "",
-    },
-    {
-        brand: "Mitsubishi",
-        model: "Eclipse Cross",
-        price: 0, // TBD
-        type: "Petrol",
-        capacity: "",
-    },
-    {
-        brand: "Mitsubishi",
-        model: "L200 Pickup Truck",
-        price: 0, // TBD
-        type: "Diesel",
-        capacity: "",
-    },
-    {
-        brand: "Mitsubishi",
-        model: "Montero Sport",
-        price: 44890000,
-        type: "Diesel",
-        capacity: "",
-    },
-    {
-        brand: "Toyota",
-        model: "Wigo",
-        price: 6700000,
-        type: "Petrol",
-        capacity: "",
-    },
-    {
-        brand: "Toyota",
-        model: "Raize",
-        price: 9500000,
-        type: "Petrol",
-        capacity: "",
-    },
-    {
-        brand: "Toyota",
-        model: "Hilux (Single Cab)",
-        price: 10600000,
-        type: "Diesel",
-        capacity: "",
-    },
-    {
-        brand: "Toyota",
-        model: "Rush",
-        price: 15300000,
-        type: "Petrol",
-        capacity: "",
-    },
-    {
-        brand: "Toyota",
-        model: "Ativ",
-        price: 15500000,
-        type: "Petrol",
-        capacity: "",
-    },
-    {
-        brand: "Toyota",
-        model: "Hilux (Double Cab)",
-        price: 15800000,
-        type: "Diesel",
-        capacity: "",
-    },
-    {
-        brand: "Toyota",
-        model: "Hiace",
-        price: 14900000,
-        type: "Diesel",
-        capacity: "",
-    },
-    {
-        brand: "Toyota",
-        model: "Coaster",
-        price: 16900000,
-        type: "Diesel",
-        capacity: "",
-    },
-    {
-        brand: "Toyota",
-        model: "Yaris Cross",
-        price: 17500000,
-        type: "Hybrid",
-        capacity: "",
-    },
-    {
-        brand: "Toyota",
-        model: "Corolla",
-        price: 22900000,
-        type: "Petrol",
-        capacity: "",
-    },
-    {
-        brand: "Toyota",
-        model: "Prius",
-        price: 23000000,
-        type: "Hybrid",
-        capacity: "",
-    },
-    {
-        brand: "Toyota",
-        model: "Corolla Cross",
-        price: 28200000,
-        type: "Hybrid",
-        capacity: "",
-    },
-    {
-        brand: "Toyota",
-        model: "RAV4",
-        price: 30500000,
-        type: "Hybrid",
-        capacity: "",
-    },
-    {
-        brand: "Toyota",
-        model: "Camry",
-        price: 35000000,
-        type: "Hybrid",
-        capacity: "",
-    },
-    {
-        brand: "Toyota",
-        model: "Land Cruiser 79",
-        price: 21300000,
-        type: "Diesel",
-        capacity: "",
-    },
-    {
-        brand: "Toyota",
-        model: "Fortuner",
-        price: 49000000,
-        type: "Diesel",
-        capacity: "",
-    },
-    {
-        brand: "Toyota",
-        model: "Alphard",
-        price: 57000000,
-        type: "Hybrid",
-        capacity: "",
-    },
-    {
-        brand: "Toyota",
-        model: "Land Cruiser 250",
-        price: 61500000,
-        type: "Diesel",
-        capacity: "",
-    },
-    {
-        brand: "Toyota",
-        model: "Land Cruiser 300",
-        price: 94000000,
-        type: "Diesel",
-        capacity: "",
-    },
-    {
-        brand: "Hyundai",
-        model: "Kona",
-        price: 18000000,
-        type: "EV",
-        capacity: "",
-    },
-    {
-        brand: "Hyundai",
-        model: "Ionic 5",
-        price: 22000000,
-        type: "EV",
-        capacity: "",
-    },
-    {
-        brand: "Hyundai",
-        model: "Ionic 6",
-        price: 16000000,
-        type: "EV",
-        capacity: "",
-    },
-    {
-        brand: "DFSK",
-        model: "Series 3 (premium)",
-        price: 12500000,
-        type: "EV",
-        capacity: "",
-    },
-    {
-        brand: "DFSK",
-        model: "Glory i auto",
-        price: 16500000,
-        type: "Petrol",
-        capacity: "",
-    },
-    {
-        brand: "Beigin",
-        model: "Premium",
-        price: 16000000,
-        type: "Petrol",
-        capacity: "",
-    },
+enum VehicleTypes {
+    EV = "Electric",
+    PETROL = "Petrol",
+    PETROL_HYBRID = "Petrol/Hybrid",
+    DIESEL_HYBRID = "Diesel",
+    DIESEL = "Diesel/Hybrid",
+}
+
+const getElectricCarTaxRate = (power: number) => {
+    if (power <= 50) {
+        return 9050;
+    } else if (power <= 100) {
+        return 12050;
+    } else if (power <= 200) {
+        return 18100;
+    } else if (power > 200) {
+        return 48300;
+    }
+    return 0;
+};
+
+const electricCarUnitCapacityWithPrice = [
+    { cc: "<50kW", price: "9050", maxTax: 452500 },
+    { cc: "50 - 100kW", price: "12050", maxTax: 1205000 },
+    { cc: "101 - 200kW", price: "18100", maxTax: 3620000 },
+    { cc: ">200kW", price: "48300" },
 ];
 
-const getHybridTaxRate = (engineCapacity: number) => {
-    if (engineCapacity < 1000) {
-        return 1710000;
-    } else if (engineCapacity >= 1001 && engineCapacity <= 1300) {
-        return 2600;
-    } else if (engineCapacity >= 1301 && engineCapacity <= 1500) {
-        return 3250;
-    } else if (engineCapacity >= 1501 && engineCapacity <= 1600) {
-        return 4550;
-    } else if (engineCapacity >= 1601 && engineCapacity <= 1800) {
-        return 5950;
-    } else if (engineCapacity >= 1801 && engineCapacity <= 2000) {
-        return 6500;
-    } else if (engineCapacity >= 2001 && engineCapacity <= 2500) {
-        return 6850;
-    }
-    return 0;
-};
-
-const getEvTaxRate = (engineCapacity: number) => {
-    if (engineCapacity < 50) {
-        return 8550;
-    } else if (engineCapacity >= 51 && engineCapacity <= 100) {
-        return 11400;
-    } else if (engineCapacity >= 101 && engineCapacity <= 200) {
-        return 17100;
-    }
-    return 0;
-};
+const electricCarUnitCapacityWithMoreThanThreeYearsPrice = [
+    { cc: "<50kW", price: "18100", maxTax: 905000 },
+    { cc: "50 - 100kW", price: "18100", maxTax: 1810000 },
+    { cc: "101 - 200kW", price: "30200", maxTax: 6040000 },
+    { cc: ">200kW", price: "66400" },
+];
 
 const getPetrolTaxRate = (engineCapacity: number) => {
     if (engineCapacity < 1000) {
-        return 2300;
-    } else if (engineCapacity >= 1001 && engineCapacity <= 1300) {
-        return 3650;
-    } else if (engineCapacity >= 1301 && engineCapacity <= 1500) {
-        return 4200;
-    } else if (engineCapacity >= 1501 && engineCapacity <= 1600) {
-        return 4850;
-    } else if (engineCapacity >= 1601 && engineCapacity <= 1800) {
-        return 6050;
-    } else if (engineCapacity >= 1801 && engineCapacity <= 2000) {
-        return 7250;
-    } else if (engineCapacity >= 2001 && engineCapacity <= 2500) {
-        return 8000;
+        if (engineCapacity * 2450 > 1992000) return 1992000 / engineCapacity;
+        return 2450;
+    } else if (engineCapacity <= 1300) {
+        return 3850;
+    } else if (engineCapacity <= 1500) {
+        return 4450;
+    } else if (engineCapacity <= 1600) {
+        return 5150;
+    } else if (engineCapacity <= 1800) {
+        return 6400;
+    } else if (engineCapacity <= 2000) {
+        return 7700;
+    } else if (engineCapacity <= 2500) {
+        return 8450;
+    } else if (engineCapacity <= 2750) {
+        return 9650;
+    } else if (engineCapacity <= 3000) {
+        return 10850;
+    } else if (engineCapacity <= 4000) {
+        return 13300;
+    } else if (engineCapacity > 4000) {
+        return 13300;
     }
     return 0;
 };
 
-const hybridUnitCapacityWithPrice = [
-    { cc: "<1000", price: "1710000" },
-    { cc: "1001 - 1300", price: "2600" },
-    { cc: "1301 - 1500", price: "3250" },
-    { cc: "1501 - 1600", price: "4550" },
-    { cc: "1601 - 1800", price: "5950" },
-    { cc: "1801 - 2000", price: "6500" },
-    { cc: "20011 - 2500", price: "6850" },
-];
-
-const evUnitCapacityWithPrice = [
-    { capacity: "<50", price: "8550" },
-    { capacity: "51 - 100", price: "11400" },
-    { capacity: "101 - 200", price: "17100" },
-];
-
 const petrolUnitCapacityWithPrice = [
-    { cc: "<1000", price: "2300" },
-    { cc: "1001 - 1300", price: "3650" },
-    { cc: "1301 - 1500", price: "4200" },
-    { cc: "1501 - 1600", price: "4850" },
-    { cc: "1601 - 1800", price: "6050" },
-    { cc: "1801 - 2000", price: "7250" },
-    { cc: "2001 - 2500", price: "8000" },
+    { cc: "<=1000", price: "1992000", maxTax: 1992000 },
+    { cc: "1001 - 1300", price: "3850", maxTax: 3850000 },
+    { cc: "1301 - 1500", price: "4450", maxTax: 6675000 },
+    { cc: "1501 - 1600", price: "5150", maxTax: 8240000 },
+    { cc: "1601 - 1800", price: "6400", maxTax: 11520000 },
+    { cc: "1801 - 2000", price: "7700", maxTax: 15400000 },
+    { cc: "2001 - 2500", price: "8450", maxTax: 21125000 },
+    { cc: "2501 - 2750", price: "9650", maxTax: 26537500 },
+    { cc: "2751 - 3000", price: "10850", maxTax: 32550000 },
+    { cc: "3001 - 4000", price: "12050", maxTax: 48200000 },
+    { cc: ">4000", price: "13300" },
 ];
+
+const getPetrolHybridTaxRate = (engineCapacity: number) => {
+    if (engineCapacity <= 1000) {
+        return 1810;
+    } else if (engineCapacity <= 1300) {
+        return 2750;
+    } else if (engineCapacity <= 1500) {
+        return 3450;
+    } else if (engineCapacity <= 1600) {
+        return 4800;
+    } else if (engineCapacity <= 1800) {
+        return 6300;
+    } else if (engineCapacity <= 2000) {
+        return 6900;
+    } else if (engineCapacity <= 2500) {
+        return 7250;
+    } else if (engineCapacity <= 2750) {
+        return 8450;
+    } else if (engineCapacity <= 3000) {
+        return 9650;
+    } else if (engineCapacity <= 4000) {
+        return 10850;
+    } else if (engineCapacity > 4000) {
+        return 12050;
+    }
+    return 0;
+};
+
+const petrolHybridUnitCapacityWithPrice = [
+    { cc: "<=1000", price: "1810900", maxTax: 1810900 },
+    { cc: "1001 - 1300", price: "2750", maxTax: 3575000 },
+    { cc: "1301 - 1500", price: "3450", maxTax: 5175000 },
+    { cc: "1501 - 1600", price: "4800", maxTax: 7680000 },
+    { cc: "1601 - 1800", price: "6300", maxTax: 11340000 },
+    { cc: "1801 - 2000", price: "6900", maxTax: 13800000 },
+    { cc: "2001 - 2500", price: "7250", maxTax: 18125000 },
+    { cc: "2501 - 2750", price: "8450", maxTax: 23237500 },
+    { cc: "2751 - 3000", price: "9650", maxTax: 28950000 },
+    { cc: "3001 - 4000", price: "10850", maxTax: 43400000 },
+    { cc: ">4000", price: "12050" },
+];
+
+const getDieselTaxRate = (engineCapacity: number) => {
+    if (engineCapacity <= 1500) {
+        return 5550;
+    } else if (engineCapacity <= 1600) {
+        return 6950;
+    } else if (engineCapacity <= 1800) {
+        return 8300;
+    } else if (engineCapacity <= 2000) {
+        return 9650;
+    } else if (engineCapacity <= 2500) {
+        return 9650;
+    } else if (engineCapacity <= 2750) {
+        return 10850;
+    } else if (engineCapacity <= 3000) {
+        return 12050;
+    } else if (engineCapacity <= 4000) {
+        return 13300;
+    } else if (engineCapacity > 4000) {
+        return 14500;
+    }
+    return 0;
+};
+
+const dieselUnitCapacityWithPrice = [
+    { cc: "<1500", price: "5550", maxTax: 8325000 },
+    { cc: "1501 - 1600", price: "6950", maxTax: 11120000 },
+    { cc: "1601 - 1800", price: "8300", maxTax: 14940000 },
+    { cc: "1801 - 2000", price: "9650", maxTax: 19300000 },
+    { cc: "2001 - 2500", price: "9650", maxTax: 24125000 },
+    { cc: "2501 - 2750", price: "10850", maxTax: 29837500 },
+    { cc: "2751 - 3000", price: "12050", maxTax: 36150000 },
+    { cc: "3001 - 4000", price: "13300", maxTax: 53200000 },
+    { cc: ">4000", price: "14500" },
+];
+
+const getDieselHybridTaxRate = (engineCapacity: number) => {
+    if (engineCapacity <= 1500) {
+        return 4150;
+    } else if (engineCapacity <= 1600) {
+        return 5550;
+    } else if (engineCapacity <= 1800) {
+        return 6900;
+    } else if (engineCapacity <= 2000) {
+        return 8350;
+    } else if (engineCapacity <= 2500) {
+        return 8450;
+    } else if (engineCapacity <= 2750) {
+        return 9650;
+    } else if (engineCapacity <= 3000) {
+        return 10850;
+    } else if (engineCapacity <= 4000) {
+        return 12050;
+    } else if (engineCapacity > 4000) {
+        return 13300;
+    }
+    return 0;
+};
+
+const dieselHybridUnitCapacityWithPrice = [
+    { cc: "<1500", price: "4150", maxTax: 6225000 },
+    { cc: "1501 - 1600", price: "5550", maxTax: 8880000 },
+    { cc: "1601 - 1800", price: "6900", maxTax: 12420000 },
+    { cc: "1801 - 2000", price: "8350", maxTax: 16700000 },
+    { cc: "2001 - 2500", price: "8450", maxTax: 21125000 },
+    { cc: "2501 - 2750", price: "9650", maxTax: 26537500 },
+    { cc: "2751 - 3000", price: "10850", maxTax: 32550000 },
+    { cc: "3001 - 4000", price: "12050", maxTax: 48200000 },
+    { cc: ">4000", price: "13300" },
+];
+
+const getTaxRate = (type: VehicleTypes, engineCapacity: number) => {
+    switch (type) {
+        case VehicleTypes.EV:
+            return getElectricCarTaxRate(engineCapacity);
+        case VehicleTypes.PETROL:
+            return getPetrolTaxRate(engineCapacity);
+        case VehicleTypes.PETROL_HYBRID:
+            return getPetrolHybridTaxRate(engineCapacity);
+        case VehicleTypes.DIESEL:
+            return getDieselTaxRate(engineCapacity);
+        case VehicleTypes.DIESEL_HYBRID:
+            return getDieselHybridTaxRate(engineCapacity);
+        default:
+            return 0;
+    }
+};
 
 export default function CarListing() {
-    const [vehicleType, setVehicleType] = useState<string>("");
+    const [vehicleType, setVehicleType] = useState<VehicleTypes | null>(null);
     const [cifValue, setCifValue] = useState<string>("");
     const [engineCapacity, setEngineCapacity] = useState<string>("");
-    const [calculationResult, setCalculationResult] = useState<number | null>(
-        null
-    );
-    const [engineTax, setEngineTax] = useState<number | null>(null);
-    const [vat, setVat] = useState<number | null>(null);
-
-    const groupedCars = useMemo(() => {
-        return carList.reduce((acc, car) => {
-            if (!acc[car.brand]) {
-                acc[car.brand] = [];
-            }
-            acc[car.brand].push(car);
-            return acc;
-        }, {} as Record<string, typeof carList>);
-    }, []);
+    const [finalResult, setFinalResult] = useState<{
+        final: number;
+        engineTax: number;
+        vat: number;
+        pal: number;
+    } | null>(null);
 
     const performCalculation = () => {
         if (!vehicleType || !cifValue || !engineCapacity) {
-            setEngineTax(null);
-            setVat(null);
-            setCalculationResult(null);
+            setFinalResult(null);
             return;
         }
 
-        const taxRate =
-            vehicleType === "ev"
-                ? getEvTaxRate(parseFloat(engineCapacity))
-                : vehicleType === "hybrid"
-                ? getHybridTaxRate(parseFloat(engineCapacity))
-                : getPetrolTaxRate(parseFloat(engineCapacity));
+        const taxRate = getTaxRate(vehicleType, parseFloat(engineCapacity));
         const engineCapacityTax = taxRate * parseFloat(engineCapacity);
-        setEngineTax(engineCapacityTax);
-        // let otherLevis = 0.1 * parseFloat(cifValue); ignoring assuming its already on CIF
-        const beforeVat = parseFloat(cifValue) + engineCapacityTax;
-        const vat = 0.18 * beforeVat;
-        setVat(vat);
-        const result = beforeVat + vat;
+        const pal = 0.05 * parseFloat(cifValue);
 
-        setCalculationResult(result);
+        const beforeVat = parseFloat(cifValue) + engineCapacityTax + pal;
+        const vat = 0.18 * beforeVat;
+
+        const result = beforeVat + vat;
+        setFinalResult({
+            final: result,
+            engineTax: engineCapacityTax,
+            vat,
+            pal,
+        });
     };
 
     const handleDownload = () => {
         window.open(
-            "https://economynext.com/wp-content/uploads/2024/01/2364-36-Sri-Lanka-Excise-duties-Jan24.pdf",
-            "_blank"
+            "https://www.treasury.gov.lk/api/file/6bb410ce-f149-444d-b2c0-515c5e053824"
         );
     };
+
+    const informationSections = [
+        {
+            name: "Petrol",
+            values: petrolUnitCapacityWithPrice,
+        },
+        {
+            name: "Petrol/Hybrid",
+            values: petrolHybridUnitCapacityWithPrice,
+        },
+        {
+            name: "Diesel",
+            values: dieselUnitCapacityWithPrice,
+        },
+        {
+            name: "Diesel/Hybrid",
+            values: dieselHybridUnitCapacityWithPrice,
+        },
+        {
+            name: "EV",
+            values: electricCarUnitCapacityWithPrice,
+        },
+        {
+            name: "EV more than 3 years",
+            values: electricCarUnitCapacityWithMoreThanThreeYearsPrice,
+        },
+    ];
 
     return (
         <div className="container mx-auto px-4 py-8">
             <h1 className="text-3xl font-bold mb-8">Price calculator</h1>
-
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-                <Select onValueChange={(value) => setVehicleType(value)}>
+                <Select
+                    onValueChange={(value: VehicleTypes) =>
+                        setVehicleType(value)
+                    }
+                >
                     <SelectTrigger>
                         <SelectValue placeholder="Select vehicle type" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="hybrid">
-                            Petrol/Hybrid or Ev/Hybrid
-                        </SelectItem>
-                        <SelectItem value="ev">EV</SelectItem>
-                        <SelectItem value="petrol">Petrol</SelectItem>
+                        {Object.values(VehicleTypes).map((v) => (
+                            <SelectItem key={v} value={v}>
+                                {v}
+                            </SelectItem>
+                        ))}
                     </SelectContent>
                 </Select>
 
@@ -525,7 +325,7 @@ export default function CarListing() {
                 <Input
                     type="number"
                     placeholder={
-                        vehicleType === "ev"
+                        vehicleType === VehicleTypes.EV
                             ? "Enter engine capacity in kWh"
                             : "Enter engine capacity in cc"
                     }
@@ -540,59 +340,73 @@ export default function CarListing() {
 
                 <Button onClick={performCalculation}>Calculate</Button>
             </div>
-            <div className="mb-8 p-4 bg-secondary rounded-md">
+            <div className="mb-8 p-4 border border-secondary rounded-md">
                 <p className="text-lg font-semibold">
-                    Formula : CIF + (Engine Capacity * Tax Rate) + (CIF +
-                    (Engine Capacity * Tax Rate) * 0.18)
-                </p>
-                <p className="text-lg font-semibold">
-                    make sure your CIF includes other levies
+                    Formula : CIF + PAL + ( Engine Capacity * Tax Rate ) + ( CIF
+                    + PAL + ( Engine Capacity * Tax Rate ) * 0.18 )
                 </p>
             </div>
-            {calculationResult !== null &&
-                engineTax !== null &&
-                vat !== null && (
-                    <div className="mb-8 p-4 bg-secondary rounded-md">
-                        <p className="text-sm font-normal">
-                            CIF:{" "}
+            {finalResult !== null && (
+                <div className="mb-8 p-4 border border-secondary rounded-md [&>div]:md:w-1/3">
+                    <div className="text-sm font-normal grid grid-cols-2">
+                        <p>CIF:</p>
+                        <p>
                             {Intl.NumberFormat("en-SI", {
                                 style: "currency",
                                 currency: "LKR",
                             }).format(Number(cifValue))}
                         </p>
-                        <p className="text-sm font-normal">
-                            Engine Tax:{" "}
+                    </div>
+                    <div className="text-sm font-normal grid grid-cols-2">
+                        <p>Engine Tax: </p>
+                        <p>
                             {Intl.NumberFormat("en-SI", {
                                 style: "currency",
                                 currency: "LKR",
-                            }).format(engineTax)}
+                            }).format(finalResult.engineTax)}
                         </p>
-                        <p className="text-sm font-normal mb-1">
-                            Total vat:{" "}
+                    </div>
+                    <div className="text-sm font-normal grid grid-cols-2">
+                        <p>PAL: </p>
+                        <p>
                             {Intl.NumberFormat("en-SI", {
                                 style: "currency",
                                 currency: "LKR",
-                            }).format(vat)}
+                            }).format(finalResult.pal)}
                         </p>
-                        <p className="text-lg font-semibold">
-                            Final Price:{" "}
+                    </div>
+                    <div className="text-sm font-normal grid grid-cols-2">
+                        <p>Total vat</p>
+                        <p>
                             {Intl.NumberFormat("en-SI", {
                                 style: "currency",
                                 currency: "LKR",
-                            }).format(calculationResult)}
+                            }).format(finalResult.vat)}
                         </p>
-                        <p className="text-lg font-semibold text-violet-400">
-                            Price ~:{" "}
+                    </div>
+                    <div className="text-sm font-normal grid grid-cols-2">
+                        <p>Final Price:</p>
+                        <p>
+                            {Intl.NumberFormat("en-SI", {
+                                style: "currency",
+                                currency: "LKR",
+                            }).format(finalResult.final)}
+                        </p>
+                    </div>
+                    <div className="text-lg font-semibold text-destructive grid grid-cols-2">
+                        <p>Price ~:</p>
+                        <p>
                             {Intl.NumberFormat("en-SI", {
                                 style: "currency",
                                 currency: "LKR",
                                 notation: "compact",
-                            }).format(calculationResult)}
+                            }).format(finalResult.final)}
                         </p>
                     </div>
-                )}
+                </div>
+            )}
 
-            <h2 className="text-3xl font-bold mb-8 flex items-center gap-2">
+            <h2 className="text-3xl  font-bold mb-8 flex items-center gap-2">
                 Unit references (2024)
                 <Download
                     className="w-8 h-8 text-primary cursor-pointer hover:text-primary/80 transition-colors"
@@ -600,119 +414,61 @@ export default function CarListing() {
                     onClick={handleDownload}
                 />
             </h2>
-            <div className="my-8 bg-secondary p-8 rounded-md">
-                <div className="grid grid-cols-1 wrap gap-4 justify-between  md:grid-cols-3 ">
-                    <div>
-                        <h3 className="text-2xl font-semibold">Petrol</h3>
-                        <h4 className="text-sm font-normal mb-4">
-                            refer section: 8703.20
-                        </h4>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Engine capacity (cc)</TableHead>
-                                    <TableHead>Unit price</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {petrolUnitCapacityWithPrice.map(
-                                    (row, index) => (
-                                        <TableRow key={index}>
-                                            <TableCell>{row.cc}</TableCell>
-                                            <TableCell>
-                                                {Intl.NumberFormat("en-SI", {
-                                                    style: "currency",
-                                                    currency: "LKR",
-                                                    notation: "standard",
-                                                    currencyDisplay:
-                                                        "narrowSymbol",
-                                                    maximumFractionDigits: 0,
-                                                    minimumFractionDigits: 0,
-                                                }).format(
-                                                    parseFloat(row.price)
-                                                )}
-                                            </TableCell>
-                                        </TableRow>
-                                    )
-                                )}
-                            </TableBody>
-                        </Table>
-                    </div>
-
-                    <div>
-                        <h3 className="text-2xl font-semibold">
-                            Petrol/Hybrid or EV/Hybrid
-                        </h3>
-                        <h4 className="text-sm font-normal mb-4">
-                            refer section: 8703.40 and 8703.60
-                        </h4>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Engine capacity (cc)</TableHead>
-                                    <TableHead>Unit price</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {hybridUnitCapacityWithPrice.map(
-                                    (row, index) => (
-                                        <TableRow key={index}>
-                                            <TableCell>{row.cc}</TableCell>
-                                            <TableCell>
-                                                {Intl.NumberFormat("en-SI", {
-                                                    style: "currency",
-                                                    currency: "LKR",
-                                                    notation: "standard",
-                                                    currencyDisplay:
-                                                        "narrowSymbol",
-                                                    maximumFractionDigits: 0,
-                                                    minimumFractionDigits: 0,
-                                                }).format(
-                                                    parseFloat(row.price)
-                                                )}
-                                            </TableCell>
-                                        </TableRow>
-                                    )
-                                )}
-                            </TableBody>
-                        </Table>
-                    </div>
-
-                    <div>
-                        <h3 className="text-2xl font-semibold">EV</h3>
-                        <h4 className="text-sm font-normal mb-4">
-                            refer section: 8703.80
-                        </h4>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Battery capacity (kW)</TableHead>
-                                    <TableHead>Unit price</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {evUnitCapacityWithPrice.map((row, index) => (
-                                    <TableRow key={index}>
-                                        <TableCell>{row.capacity}</TableCell>
-                                        <TableCell>
-                                            {Intl.NumberFormat("en-SI", {
-                                                style: "currency",
-                                                currency: "LKR",
-                                                notation: "standard",
-                                                currencyDisplay: "narrowSymbol",
-                                                maximumFractionDigits: 0,
-                                                minimumFractionDigits: 0,
-                                            }).format(parseFloat(row.price))}
-                                        </TableCell>
+            <div className="my-8 border border-secondary p-8 rounded-md">
+                <div className="grid grid-cols-1 wrap gap-4 md:gap-8 justify-between  md:grid-cols-2 ">
+                    {informationSections.map((info) => (
+                        <div key={info.name}>
+                            <h3 className="text-2xl font-semibold">
+                                {info.name}
+                            </h3>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>
+                                            Engine capacity (cc)
+                                        </TableHead>
+                                        <TableHead>Unit price</TableHead>
+                                        <TableHead>Max engine tax</TableHead>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </div>
+                                </TableHeader>
+                                <TableBody>
+                                    {info.values.map((row, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell>{row.cc}</TableCell>
+                                            <TableCell>
+                                                {Intl.NumberFormat("en-SI", {
+                                                    style: "currency",
+                                                    currency: "LKR",
+                                                    notation: "standard",
+                                                    currencyDisplay:
+                                                        "narrowSymbol",
+                                                    maximumFractionDigits: 0,
+                                                    minimumFractionDigits: 0,
+                                                }).format(
+                                                    parseFloat(row.price)
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                {Intl.NumberFormat("en-SI", {
+                                                    style: "currency",
+                                                    currency: "LKR",
+                                                    notation: "standard",
+                                                    currencyDisplay:
+                                                        "narrowSymbol",
+                                                    maximumFractionDigits: 0,
+                                                    minimumFractionDigits: 0,
+                                                }).format(row?.maxTax ?? 0)}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
+                    ))}
                 </div>
             </div>
 
-            <h1 className="text-3xl font-bold mb-8">Already known prices</h1>
+            {/* <h1 className="text-3xl font-bold mb-8">Already known prices</h1>
 
             {Object.entries(groupedCars).map(([brand, cars]) => (
                 <div
@@ -754,7 +510,7 @@ export default function CarListing() {
                         </TableBody>
                     </Table>
                 </div>
-            ))}
+            ))} */}
         </div>
     );
 }

@@ -407,7 +407,7 @@ export default function CarListing() {
                     className="mb-8 p-4 border border-secondary rounded-md [&>div]:md:w-2/3"
                 >
                     <div className="text-sm font-normal grid grid-cols-2">
-                        <p>CIF:</p>
+                        <p>CIF : </p>
                         <p>
                             {Intl.NumberFormat("en-SI", {
                                 style: "currency",
@@ -416,7 +416,7 @@ export default function CarListing() {
                         </p>
                     </div>
                     <div className="text-sm font-normal grid grid-cols-2">
-                        <p>Excise duty ( Engine Tax ) : </p>
+                        <p>Excise duty : </p>
                         <p>
                             {Intl.NumberFormat("en-SI", {
                                 style: "currency",
@@ -425,7 +425,7 @@ export default function CarListing() {
                         </p>
                     </div>
                     <div className="text-sm font-normal grid grid-cols-2">
-                        <p>Custom Duty ( 20% ): </p>
+                        <p>Custom Duty : </p>
                         <p>
                             {Intl.NumberFormat("en-SI", {
                                 style: "currency",
@@ -434,7 +434,7 @@ export default function CarListing() {
                         </p>
                     </div>
                     <div className="text-sm font-normal grid grid-cols-2">
-                        <p>Total vat ( 18% )</p>
+                        <p>Vat : </p>
                         <p>
                             {Intl.NumberFormat("en-SI", {
                                 style: "currency",

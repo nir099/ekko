@@ -19,6 +19,7 @@ import {
     TableHeader,
     TableRow,
 } from "~/components/ui/table";
+import { BorderBeam } from "./ui/border-beam";
 
 enum VehicleTypes {
     EV = "Electric",
@@ -404,8 +405,9 @@ export default function CarListing() {
             {finalResult !== null && (
                 <div
                     ref={resultRef}
-                    className="mb-8 p-4 border border-secondary rounded-md [&>div]:md:w-2/3"
+                    className=" relative w-full mb-8 p-4 border border-secondary rounded-md"
                 >
+                    <BorderBeam />
                     <div className="text-sm font-normal grid grid-cols-2">
                         <p>CIF : </p>
                         <p>

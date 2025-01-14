@@ -358,12 +358,21 @@ export default function CarListing() {
             </div>
             <div className="mb-8 p-4 border border-secondary rounded-md text-m">
                 <div className="flex gap-2">
-                    Calculation References:
+                    Calculation references:{" "}
                     <Download
                         className="text-primary cursor-pointer hover:text-primary/80 transition-colors"
                         aria-label="reference calculation source of truth"
                         onClick={handleReferencesDownload}
-                        size={20}
+                        size={18}
+                    />
+                </div>
+                <div className="flex gap-2">
+                    Import tariffs references:{" "}
+                    <Download
+                        className="text-primary cursor-pointer hover:text-primary/80 transition-colors"
+                        aria-label="reference custom duties source of truth"
+                        onClick={handleLeviesDownload}
+                        size={18}
                     />
                 </div>
                 <p>Excise Duty : Engine capacity * Engine unit price</p>
@@ -371,16 +380,10 @@ export default function CarListing() {
                 <p>
                     Vat : ( CIF + CIF * 10% + Excise Duty + Custom Duty ) * 18%
                 </p>
-                <div className="flex flex-col md:flex-row gap-2">
+                <p>
                     Other levies: Pal / cess / SSCL / SCL not applicable for
                     these HS codes
-                    <Download
-                        className="text-primary cursor-pointer hover:text-primary/80 transition-colors"
-                        aria-label="reference custom duties source of truth"
-                        onClick={handleLeviesDownload}
-                        size={20}
-                    />
-                </div>
+                </p>
                 <p className="text-lg font-semibold mt-6">
                     Total : CIF + Custom Duty + Excise Duty + Vat
                 </p>

@@ -23,9 +23,9 @@ import {
 enum VehicleTypes {
     EV = "Electric",
     PETROL = "Petrol",
-    PETROL_HYBRID = "Petrol/Hybrid",
+    PETROL_HYBRID = "Petrol/Hybrid or Petrol/PHEV",
     DIESEL_HYBRID = "Diesel",
-    DIESEL = "Diesel/Hybrid",
+    DIESEL = "Diesel/Hybrid or Diesel/PHEV",
 }
 
 const getElectricCarTaxRate = (power: number) => {
@@ -43,14 +43,14 @@ const getElectricCarTaxRate = (power: number) => {
 
 const electricCarUnitCapacityWithPrice = [
     { cc: "<50kW", price: "9050", maxTax: 452500 },
-    { cc: "50 - 100kW", price: "12050", maxTax: 1205000 },
+    { cc: "50 - 100kW", price: "12050", maxTax: 1205000, highlight: true },
     { cc: "101 - 200kW", price: "18100", maxTax: 3620000 },
     { cc: ">200kW", price: "48300" },
 ];
 
 const electricCarUnitCapacityWithMoreThanThreeYearsPrice = [
     { cc: "<50kW", price: "18100", maxTax: 905000 },
-    { cc: "50 - 100kW", price: "18100", maxTax: 1810000 },
+    { cc: "50 - 100kW", price: "18100", maxTax: 1810000, highlight: false },
     { cc: "101 - 200kW", price: "30200", maxTax: 6040000 },
     { cc: ">200kW", price: "66400" },
 ];
@@ -85,8 +85,8 @@ const getPetrolTaxRate = (engineCapacity: number) => {
 
 const petrolUnitCapacityWithPrice = [
     { cc: "<=1000", price: "1992000", maxTax: 1992000 },
-    { cc: "1001 - 1300", price: "3850", maxTax: 3850000 },
-    { cc: "1301 - 1500", price: "4450", maxTax: 6675000 },
+    { cc: "1001 - 1300", price: "3850", maxTax: 3850000, highlight: true },
+    { cc: "1301 - 1500", price: "4450", maxTax: 6675000, highlight: true },
     { cc: "1501 - 1600", price: "5150", maxTax: 8240000 },
     { cc: "1601 - 1800", price: "6400", maxTax: 11520000 },
     { cc: "1801 - 2000", price: "7700", maxTax: 15400000 },
@@ -126,8 +126,8 @@ const getPetrolHybridTaxRate = (engineCapacity: number) => {
 
 const petrolHybridUnitCapacityWithPrice = [
     { cc: "<=1000", price: "1810900", maxTax: 1810900 },
-    { cc: "1001 - 1300", price: "2750", maxTax: 3575000 },
-    { cc: "1301 - 1500", price: "3450", maxTax: 5175000 },
+    { cc: "1001 - 1300", price: "2750", maxTax: 3575000, highlight: true },
+    { cc: "1301 - 1500", price: "3450", maxTax: 5175000, highlight: true },
     { cc: "1501 - 1600", price: "4800", maxTax: 7680000 },
     { cc: "1601 - 1800", price: "6300", maxTax: 11340000 },
     { cc: "1801 - 2000", price: "6900", maxTax: 13800000 },
@@ -163,7 +163,7 @@ const getDieselTaxRate = (engineCapacity: number) => {
 
 const dieselUnitCapacityWithPrice = [
     { cc: "<1500", price: "5550", maxTax: 8325000 },
-    { cc: "1501 - 1600", price: "6950", maxTax: 11120000 },
+    { cc: "1501 - 1600", price: "6950", maxTax: 11120000, highlight: false },
     { cc: "1601 - 1800", price: "8300", maxTax: 14940000 },
     { cc: "1801 - 2000", price: "9650", maxTax: 19300000 },
     { cc: "2001 - 2500", price: "9650", maxTax: 24125000 },
@@ -198,7 +198,7 @@ const getDieselHybridTaxRate = (engineCapacity: number) => {
 
 const dieselHybridUnitCapacityWithPrice = [
     { cc: "<1500", price: "4150", maxTax: 6225000 },
-    { cc: "1501 - 1600", price: "5550", maxTax: 8880000 },
+    { cc: "1501 - 1600", price: "5550", maxTax: 8880000, highlight: false },
     { cc: "1601 - 1800", price: "6900", maxTax: 12420000 },
     { cc: "1801 - 2000", price: "8350", maxTax: 16700000 },
     { cc: "2001 - 2500", price: "8450", maxTax: 21125000 },
@@ -231,9 +231,9 @@ export default function CarListing() {
     const [engineCapacity, setEngineCapacity] = useState<string>("");
     const [finalResult, setFinalResult] = useState<{
         final: number;
-        engineTax: number;
+        exciseDuty: number;
         vat: number;
-        pal: number;
+        customDuty: number;
     } | null>(null);
 
     const performCalculation = () => {
@@ -243,18 +243,21 @@ export default function CarListing() {
         }
 
         const taxRate = getTaxRate(vehicleType, parseFloat(engineCapacity));
-        const engineCapacityTax = taxRate * parseFloat(engineCapacity);
-        const pal = 0.05 * parseFloat(cifValue);
+        const exciseDuty = taxRate * parseFloat(engineCapacity);
+        const customDuty = 0.2 * parseFloat(cifValue);
 
-        const beforeVat = parseFloat(cifValue) + engineCapacityTax + pal;
+        const beforeVat =
+            parseFloat(cifValue) +
+            ((parseFloat(cifValue) * 10) % +exciseDuty) +
+            customDuty;
         const vat = 0.18 * beforeVat;
 
         const result = beforeVat + vat;
         setFinalResult({
             final: result,
-            engineTax: engineCapacityTax,
+            exciseDuty,
+            customDuty,
             vat,
-            pal,
         });
     };
 
@@ -347,7 +350,7 @@ export default function CarListing() {
                 </p>
             </div>
             {finalResult !== null && (
-                <div className="mb-8 p-4 border border-secondary rounded-md [&>div]:md:w-1/3">
+                <div className="mb-8 p-4 border border-secondary rounded-md [&>div]:md:w-2/3">
                     <div className="text-sm font-normal grid grid-cols-2">
                         <p>CIF:</p>
                         <p>
@@ -358,30 +361,42 @@ export default function CarListing() {
                         </p>
                     </div>
                     <div className="text-sm font-normal grid grid-cols-2">
-                        <p>Engine Tax: </p>
+                        <p>Excise duty ( Engine Tax ) : </p>
                         <p>
                             {Intl.NumberFormat("en-SI", {
                                 style: "currency",
                                 currency: "LKR",
-                            }).format(finalResult.engineTax)}
+                            }).format(finalResult.exciseDuty)}
                         </p>
                     </div>
                     <div className="text-sm font-normal grid grid-cols-2">
-                        <p>PAL: </p>
+                        <p>Custom Duty ( 20% ): </p>
                         <p>
                             {Intl.NumberFormat("en-SI", {
                                 style: "currency",
                                 currency: "LKR",
-                            }).format(finalResult.pal)}
+                            }).format(finalResult.customDuty)}
                         </p>
                     </div>
                     <div className="text-sm font-normal grid grid-cols-2">
-                        <p>Total vat</p>
+                        <p>Total vat ( 18% )</p>
                         <p>
                             {Intl.NumberFormat("en-SI", {
                                 style: "currency",
                                 currency: "LKR",
                             }).format(finalResult.vat)}
+                        </p>
+                    </div>
+                    <div className="text-sm font-normal grid grid-cols-2">
+                        <p>
+                            Pal / cess / SSCL / SCL not applicable for these HS
+                            codes
+                        </p>
+                        <p>
+                            {Intl.NumberFormat("en-SI", {
+                                style: "currency",
+                                currency: "LKR",
+                            }).format(0)}
                         </p>
                     </div>
                     <div className="text-sm font-normal grid grid-cols-2">
@@ -433,7 +448,14 @@ export default function CarListing() {
                                 </TableHeader>
                                 <TableBody>
                                     {info.values.map((row, index) => (
-                                        <TableRow key={index}>
+                                        <TableRow
+                                            className={` ${
+                                                row?.highlight
+                                                    ? "text-emerald-500"
+                                                    : ""
+                                            }`}
+                                            key={index}
+                                        >
                                             <TableCell>{row.cc}</TableCell>
                                             <TableCell>
                                                 {Intl.NumberFormat("en-SI", {

@@ -248,11 +248,12 @@ export default function CarListing() {
 
         const beforeVat =
             parseFloat(cifValue) +
-            ((parseFloat(cifValue) * 10) % +exciseDuty) +
+            parseFloat(cifValue) * 0.1 +
+            exciseDuty +
             customDuty;
         const vat = 0.18 * beforeVat;
 
-        const result = beforeVat + vat;
+        const result = parseFloat(cifValue) + customDuty + exciseDuty + vat;
         setFinalResult({
             final: result,
             exciseDuty,
@@ -264,6 +265,18 @@ export default function CarListing() {
     const handleDownload = () => {
         window.open(
             "https://www.treasury.gov.lk/api/file/6bb410ce-f149-444d-b2c0-515c5e053824"
+        );
+    };
+
+    const handleReferencesDownload = () => {
+        window.open(
+            "https://www.customs.gov.lk/wp-content/uploads/2024/12/Preamble-intergrated.pdf"
+        );
+    };
+
+    const handleLeviesDownload = () => {
+        window.open(
+            "https://www.customs.gov.lk/wp-content/uploads/2024/11/Chapter_87.pdf"
         );
     };
 
@@ -343,10 +356,33 @@ export default function CarListing() {
 
                 <Button onClick={performCalculation}>Calculate</Button>
             </div>
-            <div className="mb-8 p-4 border border-secondary rounded-md">
-                <p className="text-lg font-semibold">
-                    Formula : CIF + PAL + ( Engine Capacity * Tax Rate ) + ( CIF
-                    + PAL + ( Engine Capacity * Tax Rate ) * 0.18 )
+            <div className="mb-8 p-4 border border-secondary rounded-md text-m">
+                <div className="flex gap-2">
+                    Calculation References:
+                    <Download
+                        className="text-primary cursor-pointer hover:text-primary/80 transition-colors"
+                        aria-label="reference calculation source of truth"
+                        onClick={handleReferencesDownload}
+                        size={20}
+                    />
+                </div>
+                <p>Excise Duty : Engine capacity * Engine unit price</p>
+                <p>Custom Duty : CIF * 20%</p>
+                <p>
+                    Vat : ( CIF + CIF * 10% + Excise Duty + Custom Duty ) * 18%
+                </p>
+                <div className="flex flex-col md:flex-row gap-2">
+                    Other levies: Pal / cess / SSCL / SCL not applicable for
+                    these HS codes
+                    <Download
+                        className="text-primary cursor-pointer hover:text-primary/80 transition-colors"
+                        aria-label="reference custom duties source of truth"
+                        onClick={handleLeviesDownload}
+                        size={20}
+                    />
+                </div>
+                <p className="text-lg font-semibold mt-6">
+                    Total : CIF + Custom Duty + Excise Duty + Vat
                 </p>
             </div>
             {finalResult !== null && (
@@ -388,18 +424,6 @@ export default function CarListing() {
                         </p>
                     </div>
                     <div className="text-sm font-normal grid grid-cols-2">
-                        <p>
-                            Pal / cess / SSCL / SCL not applicable for these HS
-                            codes
-                        </p>
-                        <p>
-                            {Intl.NumberFormat("en-SI", {
-                                style: "currency",
-                                currency: "LKR",
-                            }).format(0)}
-                        </p>
-                    </div>
-                    <div className="text-sm font-normal grid grid-cols-2">
                         <p>Final Price:</p>
                         <p>
                             {Intl.NumberFormat("en-SI", {
@@ -408,7 +432,7 @@ export default function CarListing() {
                             }).format(finalResult.final)}
                         </p>
                     </div>
-                    <div className="text-lg font-semibold text-destructive grid grid-cols-2">
+                    <div className="text-lg font-semibold text-emerald-500 grid grid-cols-2">
                         <p>Price ~:</p>
                         <p>
                             {Intl.NumberFormat("en-SI", {

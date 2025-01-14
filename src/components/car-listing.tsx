@@ -1,7 +1,7 @@
 "use client";
 
 import { Download } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import {
@@ -235,6 +235,13 @@ export default function CarListing() {
         vat: number;
         customDuty: number;
     } | null>(null);
+    const resultRef = useRef<HTMLDivElement | null>(null);
+
+    const scrollToElement = () => {
+        if (resultRef.current) {
+            resultRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    };
 
     const performCalculation = () => {
         if (!vehicleType || !cifValue || !engineCapacity) {
@@ -260,6 +267,7 @@ export default function CarListing() {
             customDuty,
             vat,
         });
+        scrollToElement();
     };
 
     const handleDownload = () => {
@@ -389,7 +397,10 @@ export default function CarListing() {
                 </p>
             </div>
             {finalResult !== null && (
-                <div className="mb-8 p-4 border border-secondary rounded-md [&>div]:md:w-2/3">
+                <div
+                    ref={resultRef}
+                    className="mb-8 p-4 border border-secondary rounded-md [&>div]:md:w-2/3"
+                >
                     <div className="text-sm font-normal grid grid-cols-2">
                         <p>CIF:</p>
                         <p>

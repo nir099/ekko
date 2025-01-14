@@ -238,9 +238,14 @@ export default function CarListing() {
     const resultRef = useRef<HTMLDivElement | null>(null);
 
     const scrollToElement = () => {
-        if (resultRef.current) {
-            resultRef.current.scrollIntoView({ behavior: "smooth" });
-        }
+        setTimeout(() => {
+            if (resultRef.current) {
+                resultRef.current.scrollIntoView({
+                    block: "center",
+                    behavior: "smooth",
+                });
+            }
+        }, 100);
     };
 
     const performCalculation = () => {

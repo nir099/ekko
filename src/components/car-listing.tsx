@@ -22,11 +22,8 @@ import {
 import { BorderBeam } from "./ui/border-beam";
 
 enum VehicleTypes {
-    EV = "Electric",
     PETROL = "Petrol",
     PETROL_HYBRID = "Petrol/Hybrid or Petrol/PHEV",
-    DIESEL_HYBRID = "Diesel",
-    DIESEL = "Diesel/Hybrid or Diesel/PHEV",
 }
 
 const getElectricCarTaxRate = (power: number) => {
@@ -211,19 +208,29 @@ const dieselHybridUnitCapacityWithPrice = [
 
 const getTaxRate = (type: VehicleTypes, engineCapacity: number) => {
     switch (type) {
-        case VehicleTypes.EV:
-            return getElectricCarTaxRate(engineCapacity);
+        // case VehicleTypes.EV:
+        //     return getElectricCarTaxRate(engineCapacity);
         case VehicleTypes.PETROL:
             return getPetrolTaxRate(engineCapacity);
         case VehicleTypes.PETROL_HYBRID:
             return getPetrolHybridTaxRate(engineCapacity);
-        case VehicleTypes.DIESEL:
-            return getDieselTaxRate(engineCapacity);
-        case VehicleTypes.DIESEL_HYBRID:
-            return getDieselHybridTaxRate(engineCapacity);
+        // case VehicleTypes.DIESEL:
+        //     return getDieselTaxRate(engineCapacity);
+        // case VehicleTypes.DIESEL_HYBRID:
+        //     return getDieselHybridTaxRate(engineCapacity);
         default:
             return 0;
     }
+};
+
+const getPetrolLuxuryTax = (cif: number) => {
+    if (cif < 5000000) return 0;
+    return cif - 5000000;
+};
+
+const getPetrolHybridLuxuryTax = (cif: number) => {
+    if (cif < 5500000) return 0;
+    return (cif - 5000000) * 0.8;
 };
 
 export default function CarListing() {
@@ -235,6 +242,7 @@ export default function CarListing() {
         exciseDuty: number;
         vat: number;
         customDuty: number;
+        luxuryTax: number;
     } | null>(null);
     const resultRef = useRef<HTMLDivElement | null>(null);
 
@@ -257,21 +265,24 @@ export default function CarListing() {
 
         const taxRate = getTaxRate(vehicleType, parseFloat(engineCapacity));
         const exciseDuty = taxRate * parseFloat(engineCapacity);
-        const customDuty = 0.2 * parseFloat(cifValue);
+        const customDuty = 0.4 * parseFloat(cifValue);
 
-        const beforeVat =
-            parseFloat(cifValue) +
-            parseFloat(cifValue) * 0.1 +
-            exciseDuty +
-            customDuty;
+        const beforeVat = parseFloat(cifValue) + customDuty;
         const vat = 0.18 * beforeVat;
 
-        const result = parseFloat(cifValue) + customDuty + exciseDuty + vat;
+        const luxuryTax =
+            vehicleType === VehicleTypes.PETROL_HYBRID
+                ? getPetrolHybridLuxuryTax(parseFloat(cifValue))
+                : getPetrolLuxuryTax(parseFloat(cifValue));
+
+        const result =
+            parseFloat(cifValue) + customDuty + exciseDuty + vat + luxuryTax;
         setFinalResult({
             final: result,
             exciseDuty,
             customDuty,
             vat,
+            luxuryTax,
         });
         scrollToElement();
     };
@@ -354,11 +365,7 @@ export default function CarListing() {
 
                 <Input
                     type="number"
-                    placeholder={
-                        vehicleType === VehicleTypes.EV
-                            ? "Enter engine capacity in kWh"
-                            : "Enter engine capacity in cc"
-                    }
+                    placeholder={"Enter engine capacity in cc"}
                     value={engineCapacity}
                     onChange={(e) => setEngineCapacity(e.target.value)}
                     onKeyDown={(e) =>
@@ -390,16 +397,14 @@ export default function CarListing() {
                     />
                 </div>
                 <p>Excise Duty : Engine capacity * Engine unit price</p>
-                <p>Custom Duty : CIF * 20%</p>
+                <p>Custom Duty : CIF * 40% ( 30% surcharge + PAL )</p>
+                <p>Vat : ( CIF + CIF * 40% ) * 18%</p>
                 <p>
-                    Vat : ( CIF + CIF * 10% + Excise Duty + Custom Duty ) * 18%
-                </p>
-                <p>
-                    Other levies: Pal / cess / SSCL / SCL not applicable for
-                    these HS codes
+                    Other levies: cess / SSCL / SCL not applicable for these HS
+                    codes
                 </p>
                 <p className="text-lg font-semibold mt-6">
-                    Total : CIF + Custom Duty + Excise Duty + Vat
+                    Total : CIF + Custom Duty + Excise Duty + Vat + LuxuryTax
                 </p>
             </div>
             {finalResult !== null && (
@@ -433,6 +438,15 @@ export default function CarListing() {
                                 style: "currency",
                                 currency: "LKR",
                             }).format(finalResult.customDuty)}
+                        </p>
+                    </div>
+                    <div className="text-sm font-normal grid grid-cols-2">
+                        <p>Luxury Tax : </p>
+                        <p>
+                            {Intl.NumberFormat("en-SI", {
+                                style: "currency",
+                                currency: "LKR",
+                            }).format(finalResult.luxuryTax)}
                         </p>
                     </div>
                     <div className="text-sm font-normal grid grid-cols-2">

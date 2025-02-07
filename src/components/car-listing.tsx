@@ -230,7 +230,7 @@ const getPetrolLuxuryTax = (cif: number) => {
 
 const getPetrolHybridLuxuryTax = (cif: number) => {
     if (cif < 5500000) return 0;
-    return (cif - 5000000) * 0.8;
+    return (cif - 5500000) * 0.8;
 };
 
 export default function CarListing() {

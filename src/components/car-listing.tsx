@@ -26,18 +26,18 @@ enum VehicleTypes {
     PETROL_HYBRID = "Petrol/Hybrid or Petrol/PHEV",
 }
 
-const getElectricCarTaxRate = (power: number) => {
-    if (power <= 50) {
-        return 9050;
-    } else if (power <= 100) {
-        return 12050;
-    } else if (power <= 200) {
-        return 18100;
-    } else if (power > 200) {
-        return 48300;
-    }
-    return 0;
-};
+// const getElectricCarTaxRate = (power: number) => {
+//     if (power <= 50) {
+//         return 9050;
+//     } else if (power <= 100) {
+//         return 12050;
+//     } else if (power <= 200) {
+//         return 18100;
+//     } else if (power > 200) {
+//         return 48300;
+//     }
+//     return 0;
+// };
 
 const electricCarUnitCapacityWithPrice = [
     { cc: "<50kW", price: "9050", maxTax: 452500 },
@@ -136,28 +136,28 @@ const petrolHybridUnitCapacityWithPrice = [
     { cc: ">4000", price: "12050" },
 ];
 
-const getDieselTaxRate = (engineCapacity: number) => {
-    if (engineCapacity <= 1500) {
-        return 5550;
-    } else if (engineCapacity <= 1600) {
-        return 6950;
-    } else if (engineCapacity <= 1800) {
-        return 8300;
-    } else if (engineCapacity <= 2000) {
-        return 9650;
-    } else if (engineCapacity <= 2500) {
-        return 9650;
-    } else if (engineCapacity <= 2750) {
-        return 10850;
-    } else if (engineCapacity <= 3000) {
-        return 12050;
-    } else if (engineCapacity <= 4000) {
-        return 13300;
-    } else if (engineCapacity > 4000) {
-        return 14500;
-    }
-    return 0;
-};
+// const getDieselTaxRate = (engineCapacity: number) => {
+//     if (engineCapacity <= 1500) {
+//         return 5550;
+//     } else if (engineCapacity <= 1600) {
+//         return 6950;
+//     } else if (engineCapacity <= 1800) {
+//         return 8300;
+//     } else if (engineCapacity <= 2000) {
+//         return 9650;
+//     } else if (engineCapacity <= 2500) {
+//         return 9650;
+//     } else if (engineCapacity <= 2750) {
+//         return 10850;
+//     } else if (engineCapacity <= 3000) {
+//         return 12050;
+//     } else if (engineCapacity <= 4000) {
+//         return 13300;
+//     } else if (engineCapacity > 4000) {
+//         return 14500;
+//     }
+//     return 0;
+// };
 
 const dieselUnitCapacityWithPrice = [
     { cc: "<1500", price: "5550", maxTax: 8325000 },
@@ -171,28 +171,28 @@ const dieselUnitCapacityWithPrice = [
     { cc: ">4000", price: "14500" },
 ];
 
-const getDieselHybridTaxRate = (engineCapacity: number) => {
-    if (engineCapacity <= 1500) {
-        return 4150;
-    } else if (engineCapacity <= 1600) {
-        return 5550;
-    } else if (engineCapacity <= 1800) {
-        return 6900;
-    } else if (engineCapacity <= 2000) {
-        return 8350;
-    } else if (engineCapacity <= 2500) {
-        return 8450;
-    } else if (engineCapacity <= 2750) {
-        return 9650;
-    } else if (engineCapacity <= 3000) {
-        return 10850;
-    } else if (engineCapacity <= 4000) {
-        return 12050;
-    } else if (engineCapacity > 4000) {
-        return 13300;
-    }
-    return 0;
-};
+// const getDieselHybridTaxRate = (engineCapacity: number) => {
+//     if (engineCapacity <= 1500) {
+//         return 4150;
+//     } else if (engineCapacity <= 1600) {
+//         return 5550;
+//     } else if (engineCapacity <= 1800) {
+//         return 6900;
+//     } else if (engineCapacity <= 2000) {
+//         return 8350;
+//     } else if (engineCapacity <= 2500) {
+//         return 8450;
+//     } else if (engineCapacity <= 2750) {
+//         return 9650;
+//     } else if (engineCapacity <= 3000) {
+//         return 10850;
+//     } else if (engineCapacity <= 4000) {
+//         return 12050;
+//     } else if (engineCapacity > 4000) {
+//         return 13300;
+//     }
+//     return 0;
+// };
 
 const dieselHybridUnitCapacityWithPrice = [
     { cc: "<1500", price: "4150", maxTax: 6225000 },

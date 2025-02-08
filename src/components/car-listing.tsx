@@ -26,6 +26,13 @@ enum VehicleTypes {
     PETROL_HYBRID = "Petrol/Hybrid or Petrol/PHEV",
 }
 
+enum Currency {
+    LKR = "LKR -> 1",
+    USD = "USD -> 302",
+    GBP = "GBP -> 375",
+    JPY = "JPY -> 2",
+}
+
 // const getElectricCarTaxRate = (power: number) => {
 //     if (power <= 50) {
 //         return 9050;
@@ -233,9 +240,25 @@ const getPetrolHybridLuxuryTax = (cif: number) => {
     return (cif - 5500000) * 0.8;
 };
 
+const currencyToValue = (currency: Currency) => {
+    if (currency === Currency.USD) {
+        return 302;
+    }
+    if (currency === Currency.GBP) {
+        return 375;
+    }
+    if (currency === Currency.LKR) {
+        return 1;
+    }
+    if (currency === Currency.JPY) {
+        return 2;
+    }
+    return 0;
+};
 export default function CarListing() {
     const [vehicleType, setVehicleType] = useState<VehicleTypes | null>(null);
     const [cifValue, setCifValue] = useState<string>("");
+    const [currency, setCurrency] = useState<Currency | null>(null);
     const [engineCapacity, setEngineCapacity] = useState<string>("");
     const [finalResult, setFinalResult] = useState<{
         final: number;
@@ -243,6 +266,7 @@ export default function CarListing() {
         vat: number;
         customDuty: number;
         luxuryTax: number;
+        cifVal: number;
     } | null>(null);
     const resultRef = useRef<HTMLDivElement | null>(null);
 
@@ -258,26 +282,28 @@ export default function CarListing() {
     };
 
     const performCalculation = () => {
-        if (!vehicleType || !cifValue || !engineCapacity) {
+        if (!vehicleType || !cifValue || !engineCapacity || !currency) {
             setFinalResult(null);
             return;
         }
 
+        const cifVal =
+            parseFloat(cifValue) * currencyToValue(currency as Currency);
         const taxRate = getTaxRate(vehicleType, parseFloat(engineCapacity));
         const exciseDuty = taxRate * parseFloat(engineCapacity);
-        const customDuty = 0.4 * parseFloat(cifValue);
+        const customDuty = 0.4 * cifVal;
 
-        const beforeVat = parseFloat(cifValue) + customDuty;
+        const beforeVat = cifVal + customDuty;
         const vat = 0.18 * beforeVat;
 
         const luxuryTax =
             vehicleType === VehicleTypes.PETROL_HYBRID
-                ? getPetrolHybridLuxuryTax(parseFloat(cifValue))
-                : getPetrolLuxuryTax(parseFloat(cifValue));
+                ? getPetrolHybridLuxuryTax(cifVal)
+                : getPetrolLuxuryTax(cifVal);
 
-        const result =
-            parseFloat(cifValue) + customDuty + exciseDuty + vat + luxuryTax;
+        const result = cifVal + customDuty + exciseDuty + vat + luxuryTax;
         setFinalResult({
+            cifVal,
             final: result,
             exciseDuty,
             customDuty,
@@ -293,17 +319,17 @@ export default function CarListing() {
         );
     };
 
-    const handleReferencesDownload = () => {
-        window.open(
-            "https://www.customs.gov.lk/wp-content/uploads/2024/12/Preamble-intergrated.pdf"
-        );
-    };
+    // const handleReferencesDownload = () => {
+    //     window.open(
+    //         "https://www.customs.gov.lk/wp-content/uploads/2024/12/Preamble-intergrated.pdf"
+    //     );
+    // };
 
-    const handleLeviesDownload = () => {
-        window.open(
-            "https://www.customs.gov.lk/wp-content/uploads/2024/11/Chapter_87.pdf"
-        );
-    };
+    // const handleLeviesDownload = () => {
+    //     window.open(
+    //         "https://www.customs.gov.lk/wp-content/uploads/2024/11/Chapter_87.pdf"
+    //     );
+    // };
 
     const informationSections = [
         {
@@ -335,7 +361,7 @@ export default function CarListing() {
     return (
         <div className="container mx-auto px-4 py-8">
             <h1 className="text-3xl font-bold mb-8">Price calculator</h1>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
                 <Select
                     onValueChange={(value: VehicleTypes) =>
                         setVehicleType(value)
@@ -355,13 +381,26 @@ export default function CarListing() {
 
                 <Input
                     type="number"
-                    placeholder="Enter CIF value in LKR"
+                    placeholder="Enter CIF value"
                     value={cifValue}
                     onChange={(e) => setCifValue(e.target.value)}
                     onKeyDown={(e) =>
                         e.key === "Enter" ? performCalculation() : null
                     }
                 />
+
+                <Select onValueChange={(value: Currency) => setCurrency(value)}>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Select currency" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {Object.values(Currency).map((v) => (
+                            <SelectItem key={v} value={v}>
+                                {v}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
 
                 <Input
                     type="number"
@@ -378,24 +417,6 @@ export default function CarListing() {
                 <Button onClick={performCalculation}>Calculate</Button>
             </div>
             <div className="mb-8 p-4 border border-secondary rounded-md text-m">
-                <div className="flex gap-2">
-                    Calculation references:{" "}
-                    <Download
-                        className="text-primary cursor-pointer hover:text-primary/80 transition-colors"
-                        aria-label="reference calculation source of truth"
-                        onClick={handleReferencesDownload}
-                        size={18}
-                    />
-                </div>
-                <div className="flex gap-2">
-                    Import tariffs references:{" "}
-                    <Download
-                        className="text-primary cursor-pointer hover:text-primary/80 transition-colors"
-                        aria-label="reference custom duties source of truth"
-                        onClick={handleLeviesDownload}
-                        size={18}
-                    />
-                </div>
                 <p>Excise Duty : Engine capacity * Engine unit price</p>
                 <p>Custom Duty : CIF * 40% ( 30% surcharge + PAL )</p>
                 <p>Vat : ( CIF + CIF * 40% ) * 18%</p>
@@ -419,7 +440,7 @@ export default function CarListing() {
                             {Intl.NumberFormat("en-SI", {
                                 style: "currency",
                                 currency: "LKR",
-                            }).format(Number(cifValue))}
+                            }).format(Number(finalResult.cifVal))}
                         </p>
                     </div>
                     <div className="text-sm font-normal grid grid-cols-2">

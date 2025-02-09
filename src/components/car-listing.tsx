@@ -267,6 +267,8 @@ export default function CarListing() {
         customDuty: number;
         luxuryTax: number;
         cifVal: number;
+        oldPrice: number;
+        increase: number;
     } | null>(null);
     const resultRef = useRef<HTMLDivElement | null>(null);
 
@@ -302,6 +304,8 @@ export default function CarListing() {
                 : getPetrolLuxuryTax(cifVal);
 
         const result = cifVal + customDuty + exciseDuty + vat + luxuryTax;
+        const oldPrice = cifVal + exciseDuty + cifVal * 0.1;
+        const increase = (result - oldPrice) * (100 / oldPrice);
         setFinalResult({
             cifVal,
             final: result,
@@ -309,6 +313,8 @@ export default function CarListing() {
             customDuty,
             vat,
             luxuryTax,
+            oldPrice,
+            increase,
         });
         scrollToElement();
     };
@@ -497,6 +503,20 @@ export default function CarListing() {
                                 notation: "compact",
                             }).format(finalResult.final)}
                         </p>
+                    </div>
+                    <div className="text-sm  grid grid-cols-2">
+                        <p>Old tax ~:</p>
+                        <p>
+                            {Intl.NumberFormat("en-SI", {
+                                style: "currency",
+                                currency: "LKR",
+                                notation: "compact",
+                            }).format(finalResult.oldPrice)}
+                        </p>
+                    </div>
+                    <div className="text-sm text-sky-700 grid grid-cols-2">
+                        <p>Tax increase ~:</p>
+                        <p>{finalResult.increase.toFixed(2)} %</p>
                     </div>
                 </div>
             )}

@@ -305,7 +305,7 @@ export default function CarListing() {
 
         const result = cifVal + customDuty + exciseDuty + vat + luxuryTax;
         const oldPrice = cifVal + exciseDuty + cifVal * 0.1;
-        const increase = (result - oldPrice) * (100 / oldPrice);
+        const increase = ((result - oldPrice) / oldPrice) * 100;
         setFinalResult({
             cifVal,
             final: result,

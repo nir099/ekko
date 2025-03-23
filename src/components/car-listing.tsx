@@ -46,19 +46,19 @@ enum Currency {
 //     return 0;
 // };
 
-const electricCarUnitCapacityWithPrice = [
-    { cc: "<50kW", price: "9050", maxTax: 452500 },
-    { cc: "50 - 100kW", price: "12050", maxTax: 1205000, highlight: true },
-    { cc: "101 - 200kW", price: "18100", maxTax: 3620000 },
-    { cc: ">200kW", price: "48300" },
-];
+// const electricCarUnitCapacityWithPrice = [
+//     { cc: "<50kW", price: "9050", maxTax: 452500 },
+//     { cc: "50 - 100kW", price: "12050", maxTax: 1205000, highlight: true },
+//     { cc: "101 - 200kW", price: "18100", maxTax: 3620000 },
+//     { cc: ">200kW", price: "48300" },
+// ];
 
-const electricCarUnitCapacityWithMoreThanThreeYearsPrice = [
-    { cc: "<50kW", price: "18100", maxTax: 905000 },
-    { cc: "50 - 100kW", price: "18100", maxTax: 1810000, highlight: false },
-    { cc: "101 - 200kW", price: "30200", maxTax: 6040000 },
-    { cc: ">200kW", price: "66400" },
-];
+// const electricCarUnitCapacityWithMoreThanThreeYearsPrice = [
+//     { cc: "<50kW", price: "18100", maxTax: 905000 },
+//     { cc: "50 - 100kW", price: "18100", maxTax: 1810000, highlight: false },
+//     { cc: "101 - 200kW", price: "30200", maxTax: 6040000 },
+//     { cc: ">200kW", price: "66400" },
+// ];
 
 const getPetrolTaxRate = (engineCapacity: number) => {
     if (engineCapacity < 1000) {
@@ -354,14 +354,14 @@ export default function CarListing() {
             name: "Diesel/Hybrid",
             values: dieselHybridUnitCapacityWithPrice,
         },
-        {
-            name: "EV",
-            values: electricCarUnitCapacityWithPrice,
-        },
-        {
-            name: "EV more than 3 years",
-            values: electricCarUnitCapacityWithMoreThanThreeYearsPrice,
-        },
+        // {
+        //     name: "EV",
+        //     values: electricCarUnitCapacityWithPrice,
+        // },
+        // {
+        //     name: "EV more than 3 years",
+        //     values: electricCarUnitCapacityWithMoreThanThreeYearsPrice,
+        // },
     ];
 
     return (

@@ -62,7 +62,6 @@ enum Currency {
 
 const getPetrolTaxRate = (engineCapacity: number) => {
     if (engineCapacity < 1000) {
-        if (engineCapacity * 2450 > 1992000) return 1992000 / engineCapacity;
         return 2450;
     } else if (engineCapacity <= 1300) {
         return 3850;
@@ -242,7 +241,7 @@ const getPetrolHybridLuxuryTax = (cif: number) => {
 
 const currencyToValue = (currency: Currency) => {
     if (currency === Currency.USD) {
-        return 302;
+        return 304.8843;
     }
     if (currency === Currency.GBP) {
         return 375;
@@ -294,9 +293,10 @@ export default function CarListing() {
             parseFloat(cifValue) * currencyToValue(currency as Currency);
         const taxRate = getTaxRate(vehicleType, parseFloat(engineCapacity));
         const exciseDuty = taxRate * parseFloat(engineCapacity);
-        const customDuty = 0.4 * cifVal;
 
-        const beforeVat = cifVal + customDuty;
+        const customDuty = 0.3 * cifVal;
+
+        const beforeVat = cifVal + customDuty + cifVal * 0.1 + exciseDuty;
         const vat = 0.18 * beforeVat;
 
         const luxuryTax =

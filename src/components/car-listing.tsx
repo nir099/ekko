@@ -527,7 +527,6 @@ export default function CarListing() {
                             {Intl.NumberFormat("en-SI", {
                                 style: "currency",
                                 currency: "LKR",
-                                notation: "compact",
                             }).format(finalResult.totalTax)}
                         </p>
                     </div>
